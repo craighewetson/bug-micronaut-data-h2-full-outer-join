@@ -29,6 +29,17 @@ class OuterjoinTest {
         // now confirm that the fido still has his collar:
         Dog fidoFromDb = dogRepository.findById(fido.id()).orElseThrow();
         Assertions.assertNotNull(fidoFromDb.collar());
+
+        // now for dog without collar:
+        Dog tramp = dogRepository.save(new Dog(-1L, "tramp", null));
+        connection.commit();
+
+        // if the outer join does not work then this query will fail.
+        // Tramp must be retrieved without his collar
+        Dog trampFromDb = dogRepository.findById(tramp.id()).orElseThrow();
+
+        Assertions.assertNull(trampFromDb.collar());
+
     }
 
 }
